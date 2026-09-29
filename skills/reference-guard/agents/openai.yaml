@@ -1,0 +1,4 @@
+interface:
+  display_name: "参考文献纠错"
+  short_description: "核实参考文献真实性与著录格式，交付修正版并强制逐条独立复核"
+  default_prompt: "使用 $reference-guard 核查并修正这份参考文献表，先确认格式要求，交付前创建子代理逐条独立复核。"

@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "snapshot_date": "2026-09-28",
+  "files": {
+    "vendor/citeproc_commonjs.js": {
+      "sha256": "55abba1a8b8b48c14323fd053f9646013b4b7a0c977938064ecf5195a502b9f1",
+      "source": "https://registry.npmjs.org/citeproc/-/citeproc-2.4.63.tgz",
+      "upstream_version": "2.4.63",
+      "license": "AGPL-3.0-or-later"
+    },
+    "styles/gbt2025-numeric.csl": {
+      "sha256": "05a868143126f41acf9737852fdd480bc50f3215dd029d0916ea5847972f9b21",
+      "source": "https://raw.githubusercontent.com/citation-style-language/styles/440c9c9f38136fc4a90dca2d3ba974ae08988274/china-national-standard-gb-t-7714-2025-numeric.csl",
+      "upstream_version": "440c9c9f38136fc4a90dca2d3ba974ae08988274",
+      "license": "CC-BY-SA-3.0",
+      "upstream_sha256": "3b5ab6249ce23b57954c9a4a67e0df422d8759b0573cae7e7de2f2ef94895faf",
+      "local_revision": "reference-guard-2",
+      "modifications": [
+        "Do not infer publication year from access year.",
+        "Preserve known archive page ranges.",
+        "Preserve evidenced approximate publication dates in the date macro and all periodical date branches."
+      ]
+    },
+    "styles/apa7.csl": {
+      "sha256": "1ece4fb3c295e66d04b4394e295aa58a87741ceeef1658192437eb9953c2f13e",
+      "source": "https://raw.githubusercontent.com/citation-style-language/styles/32078ede72b9224e1ed02c546668e20ee7c75585/apa.csl",
+      "upstream_version": "32078ede72b9224e1ed02c546668e20ee7c75585",
+      "license": "CC-BY-SA-3.0"
+    },
+    "styles/ieee.csl": {
+      "sha256": "b4c7619fc16c45a31e4cc3271eab94ffe83192d3b4c7fc729470a3b459448de3",
+      "source": "https://raw.githubusercontent.com/citation-style-language/styles/1ccf4696be22ea0b55f83cc9163bde3061fddb0a/ieee.csl",
+      "upstream_version": "1ccf4696be22ea0b55f83cc9163bde3061fddb0a",
+      "license": "CC-BY-SA-3.0"
+    },
+    "locales/locales-zh-CN.xml": {
+      "sha256": "95cebc667f2da8fb5b9864e49941e3f867d59f79feba929bc58e8ed6bfd4d582",
+      "source": "https://raw.githubusercontent.com/citation-style-language/locales/a89adece41013402236e2c9020972d7e931fbab8/locales-zh-CN.xml",
+      "upstream_version": "a89adece41013402236e2c9020972d7e931fbab8",
+      "license": "CC-BY-SA-3.0"
+    },
+    "locales/locales-en-US.xml": {
+      "sha256": "ac864c7c21166b4390d82c31792cdc509400727fa0060b43d8aa17e07f9cb079",
+      "source": "https://raw.githubusercontent.com/citation-style-language/locales/a89adece41013402236e2c9020972d7e931fbab8/locales-en-US.xml",
+      "upstream_version": "a89adece41013402236e2c9020972d7e931fbab8",
+      "license": "CC-BY-SA-3.0"
+    }
+  }
+}

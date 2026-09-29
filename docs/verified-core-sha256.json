@@ -1,0 +1,22 @@
+{
+  "SKILL.md": "ace6870652c7adbc861d76bf018fbe96f26973dcbe0409e5ad5a560a23d72770",
+  "agents/openai.yaml": "68b557226807599686b81cfb582e4ccfc3d4f09f2ab369c7427b8082139c2be4",
+  "assets/THIRD_PARTY_NOTICES.md": "59371aaf3a7cdd792b4679fd88bf31650c3309b710ca2703d18fba1fafc2b67d",
+  "assets/locales/locales-en-US.xml": "ac864c7c21166b4390d82c31792cdc509400727fa0060b43d8aa17e07f9cb079",
+  "assets/locales/locales-zh-CN.xml": "95cebc667f2da8fb5b9864e49941e3f867d59f79feba929bc58e8ed6bfd4d582",
+  "assets/manifest.json": "82fc3a75a87af5c03d5c5ce16fa947171ea59d21538a35692b4ca12c9767421f",
+  "assets/styles/apa7.csl": "1ece4fb3c295e66d04b4394e295aa58a87741ceeef1658192437eb9953c2f13e",
+  "assets/styles/gbt2025-numeric.csl": "05a868143126f41acf9737852fdd480bc50f3215dd029d0916ea5847972f9b21",
+  "assets/styles/gbt2025-patches.md": "8dffea9f71c5d13db7eccc2a4aa49d563ae68ee1dd521517e69ee318facc90d3",
+  "assets/styles/ieee.csl": "b4c7619fc16c45a31e4cc3271eab94ffe83192d3b4c7fc729470a3b459448de3",
+  "assets/vendor/AGPL-3.0.txt": "d8a6cc31abc16b6748c7a21f21611f5a1ec33f67d22ca23d7da1c19b95496bee",
+  "assets/vendor/LICENSE-citeproc.txt": "b96ca8e1716f93449b480083c7510c18d129fa9afa4644d62c6347c06177ce30",
+  "assets/vendor/citeproc_commonjs.js": "55abba1a8b8b48c14323fd053f9646013b4b7a0c977938064ecf5195a502b9f1",
+  "references/adversarial-review.md": "ab5af756c9436aa4b9ecdcc85375fe19da3b9fbbe43acc258d7b776a9173232f",
+  "references/formatting.md": "a1828ebd8d979cf255cb8da5eb31fd1a6e53b1ac537037a21ecf835066d03d39",
+  "references/verification.md": "a877c7cd06330a837c12349f452c1773225fe49bc6df5dc4da3f9c18d8996c2f",
+  "scripts/doi_metadata.py": "01284dc376ecb3574370304f39cd1eeadad3b213da88e74e584a0df778d88eaa",
+  "scripts/format_bibliography.cjs": "cd5a471ac907b9a991bc35704079fb82dd1ce21eee684bb5ca774ed175a28987",
+  "scripts/review_gate.py": "327c3a15ac730617bf61f577765812cda85322841743ed42da347f505504ce12",
+  "scripts/tests/test_reference_tools.py": "46fb65e553991df745f37223feca70ddee8b4507459d62b03e7d43a356df5de0"
+}
