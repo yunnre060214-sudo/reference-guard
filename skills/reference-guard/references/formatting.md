@@ -35,3 +35,9 @@ GB/T 输入中的 `report` 默认表示独立报告，不能仅凭 `publisher` �
 CSL 是实现而非标准原文。子代理还要对照具体类型的规范独立检查。内置 GB/T 样式已按实际复现的问题做三处局部修补，见 `assets/styles/gbt2025-patches.md`；不能把它称作未经修改的上游文件。来源、原始与本地摘要记录在 `assets/manifest.json`；第三方授权说明在 `assets/THIRD_PARTY_NOTICES.md`。
 
 其他规范入口：[APA 参考文献指南](https://apastyle.apa.org/style-grammar-guidelines/references)、[IEEE Author Center 的 Reference Guide 入口](https://journals.ieeeauthorcenter.ieee.org/your-role-in-article-production/ieee-editorial-style-manual/)。打不开规范时报告限制，不把文件名或样式引擎运行成功当作格式已经确认。
+
+## 2.0 输出映射
+
+格式器输出 schema_version 2，包含 `input_sha256`（输入数组经 JSON.stringify 序列化的摘要）、`bibliography_order`、每行的 `input_index` 和 `bibliography_index`（均从 1 开始）。排序格式可能改变输出位置，应把 bibliography_order 登记到 draft，保留原始 entries 顺序。输入摘要只绑定格式器接收到的数据，不认证来源。
+
+工具拒绝非法姓名结构、无法成立的日历日期及不安全的访问 URL，支持 UTF-8 BOM；这些输入检查不能替代条款核验。`--output` 拒绝覆盖既存文件，请使用新文件名或在授权的任务目录内显式管理旧候选。冻结导出的文本保持 candidate 内容，富文本仍需复核实际 HTML、布局与最终文件。

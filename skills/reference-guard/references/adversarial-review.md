@@ -30,7 +30,7 @@ python3 <skill目录>/scripts/review_gate.py packet --draft draft.json --output 
 
 ```json
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "main_agent_id": "/root",
   "style": {
     "name": "GB/T 7714—2025",
@@ -48,7 +48,7 @@ python3 <skill目录>/scripts/review_gate.py packet --draft draft.json --output 
 
 这是结构示意；URL、字段及结论必须来自本次真实操作。`style.name` 使用规范名，细则另行记录；用户明确无要求时它必须是 GB/T 7714—2025。`decision` 可为 include、unresolved、needs_user、duplicate；未解决条目的 candidate 是 null，并保留原文及问题。完全重复的同版作品可给 duplicate 指定 `duplicate_of`，保存映射；主审与复审均须有核实依据、复审不能留有问题，不能只因 DOI 相同就合并题名不一致的条目。
 
-交付 HTML 时，每行补 `candidate_html`；布局参数写入顶层 `presentation`。这两项也进入资料包和版本摘要。未解决/重复行不保留待交付的 HTML。其他文件载体也必须把实际内容及布局交给代理审查；JSON 检查不能证明外部文件与资料包相同，交付前由主代理核对冻结版本。
+交付 HTML 时，每行补 `candidate_html`；布局参数写入顶层 `presentation`。这两项也进入资料包和版本摘要。未解决/重复行不保留待交付的 HTML。其他文件载体也必须把实际内容及布局交给代理审查；外部文件在 draft 的 `artifacts` 中登记相对路径与字节 SHA-256，check/export 按 draft 所在目录检查路径与实际字节。视觉排版仍由真实子代理检查，主代理核对实际交付的冻结文件。
 
 `review.json` 包含真实 `reviewer_agent_id`、`independent: true`、当前 `packet_sha256`、覆盖每个原始 ID 的 `rows`。每行必须明确填写三项状态和 `issues` 列表，未解决行也不能只写 ID 与结论。`issues` 只列当前仍需解决的问题；原始错误已经修复时另存 `original_issues`，保留诊断，避免把历史问题混作修正版的阻断问题。问题要有 `code` 和 `detail`；来源地址/路径与定位必须是非空字符串。include 行只有 identity、metadata、format 都 verified、verdict 为 pass、没有问题，才可放行；duplicate 行必须确认同版作品与信息一致、没有遗留问题，并对应已通过的保留条目；其他条目保持明确的未解决状态。
 
@@ -56,6 +56,8 @@ python3 <skill目录>/scripts/review_gate.py packet --draft draft.json --output 
 python3 <skill目录>/scripts/review_gate.py check --draft draft.json --review review.json
 ```
 
-检查工具验证覆盖、重复 ID、主审与复审标识、版本摘要及状态一致性；**不验证 URL 内容，也不能证明 JSON 中的代理标识确实对应真实调用**。主代理仍须查验真实委派及审查操作。`complete: false` 时只能交付明确标注的已核实部分。覆盖不足、草稿修改、交付条目有阻断问题时返回失败；任何这些失败都不能被一句“复核已通过”覆盖。
+2.0 的摘要绑定完整 draft，包括不向复审展示的取舍、证据、重复映射和排序；任何变更都须重新生成 packet 并真实复核当前完整稿。init 创建的输入数量和原始 ID/文本指纹也必须一致。检查工具验证这些一致性、全量覆盖、主审与复审标识、外部文件字节及状态；**不验证 URL 内容，也不能证明 JSON 中的代理标识确实对应真实调用**。主代理仍须查验真实委派及审查操作。`complete: false` 时只能交付明确标注的已核实部分。覆盖不足、草稿修改、交付条目有阻断问题时返回失败；任何这些失败都不能被一句“复核已通过”覆盖。
 
 如果没有真实子代理工具或来源访问能力，交付实际已有的诊断与未完成原因，不能冒充独立核验过的正确参考文献。遇到身份或证据问题，向用户索取必要材料，并继续能独立完成的条目；不无限重复没有新信息的相同检索。
+
+完整的初始化、批量登记查询、诊断与冻结导出命令见 [工具工作流](workflow.md)。旧摘要契约已停用，不得将旧 packet 的摘要手动抄入新审查结果来绕过复核。

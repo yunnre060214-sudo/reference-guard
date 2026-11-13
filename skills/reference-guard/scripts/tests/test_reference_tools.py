@@ -277,6 +277,8 @@ class ReviewGateTests(unittest.TestCase):
         row = self.review["rows"][1]
         row.update(verdict="duplicate", duplicate_of="R1", identity="verified", metadata="verified",
                    format="not_applicable", issues=[], sources=copy.deepcopy(self.review["rows"][0]["sources"]))
+        # Decisions/evidence are now sealed too: get a review of the new packet.
+        self.review["packet_sha256"] = self.tool.packet_hash(self.draft)
         self.assertTrue(self.tool.check_release(self.draft, self.review)["complete"])
         row["issues"] = [{"code": "version_conflict", "severity": "blocking", "detail": "Versions differ"}]
         self.assertFalse(self.tool.check_release(self.draft, self.review)["structural_checks_passed"])

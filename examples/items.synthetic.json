@@ -1,0 +1,8 @@
+[
+  {
+    "id": "R1", "type": "article-journal", "title": "Synthetic formatting example",
+    "author": [{"family": "Example", "given": "Ada"}],
+    "container-title": "Synthetic Journal", "volume": "1", "issue": "2", "page": "3-5",
+    "issued": {"date-parts": [[2024]]}
+  }
+]
