@@ -33,8 +33,49 @@ function parseArgs(args) {
   if (!result['--input'] || Boolean(result['--style']) === Boolean(result['--style-file'])) {
     throw new Error('Supply --input and exactly one of --style or --style-file');
   }
-  if (result['--style'] && !styles[result['--style']]) throw new Error('Unsupported built-in style');
+  if (result['--style'] && !Object.hasOwn(styles, result['--style'])) throw new Error('Unsupported built-in style');
   return result;
+}
+
+function validateItem(item) {
+  if (!item || Array.isArray(item) || typeof item !== 'object' ||
+      !['id', 'type', 'title'].every(key => typeof item[key] === 'string' && item[key].trim()) || item.id.trim() !== item.id) {
+    throw new Error('Every item needs a nonempty string id, type, and title; ID whitespace is not allowed');
+  }
+  for (const field of ['DOI', 'URL', 'language', 'version', 'publication-form']) {
+    if (field in item && (typeof item[field] !== 'string' || !item[field].trim())) throw new Error(item.id + ': invalid ' + field);
+  }
+  if (item.URL) {
+    const url = new URL(item.URL);
+    if (!['http:', 'https:', 'ftp:'].includes(url.protocol) || url.username || url.password) throw new Error(item.id + ': unsafe URL protocol or credentials');
+  }
+  for (const field of ['author', 'editor', 'translator']) {
+    if (field in item && (!Array.isArray(item[field]) || item[field].some(name =>
+      !name || Array.isArray(name) || typeof name !== 'object' ||
+      !['family', 'given', 'literal'].some(key => typeof name[key] === 'string' && name[key].trim()) ||
+      ['family', 'given', 'literal'].some(key => key in name && typeof name[key] !== 'string')))) {
+      throw new Error(item.id + ': invalid names in ' + field);
+    }
+  }
+  for (const field of ['issued', 'accessed', 'available-date', 'original-date']) {
+    if (!(field in item)) continue;
+    const date = item[field];
+    if (!date || Array.isArray(date) || typeof date !== 'object') throw new Error(item.id + ': invalid ' + field);
+    if ('date-parts' in date && (!Array.isArray(date['date-parts']) || !date['date-parts'].length || date['date-parts'].length > 2 ||
+      date['date-parts'].some(parts => {
+        if (!Array.isArray(parts) || !parts.length || parts.length > 3 || !parts.every(Number.isInteger)) return true;
+        if (parts.length > 1 && (parts[1] < 1 || parts[1] > 12)) return true;
+        if (parts.length > 2) {
+          const d = new Date(0);
+          d.setUTCFullYear(parts[0], parts[1] - 1, parts[2]);
+          return d.getUTCFullYear() !== parts[0] || d.getUTCMonth() !== parts[1] - 1 || d.getUTCDate() !== parts[2];
+        }
+        return false;
+      }))) throw new Error(item.id + ': invalid calendar date in ' + field);
+    if (!('date-parts' in date) && !(typeof date.literal === 'string' && date.literal.trim()) && !(typeof date.raw === 'string' && date.raw.trim())) {
+      throw new Error(item.id + ': ' + field + ' needs date-parts, literal or raw');
+    }
+  }
 }
 
 function render(items, args) {
@@ -43,9 +84,7 @@ function render(items, args) {
   const warnings = [];
   const normalizations = [];
   for (const item of items) {
-    if (!item || typeof item.id !== 'string' || !item.id || typeof item.type !== 'string' || !item.type || typeof item.title !== 'string' || !item.title.trim()) {
-      throw new Error('Every item needs a nonempty string id, type, and title');
-    }
+    validateItem(item);
     if (records.has(item.id)) throw new Error('Duplicate item ID: ' + item.id);
     const record = JSON.parse(JSON.stringify(item));
     if (args['--style'] === 'gbt2025') {
@@ -107,14 +146,20 @@ function render(items, args) {
   if (!html || !text || html[0].bibliography_errors.length || text[0].bibliography_errors.length) {
     throw new Error('Renderer could not produce a complete bibliography');
   }
+  if (JSON.stringify(text[0].entry_ids) !== JSON.stringify(html[0].entry_ids) ||
+      text[0].entry_ids.some(ids => ids.length !== 1)) throw new Error('Text and HTML bibliography mappings differ');
+  const inputPositions = new Map(items.map((item, index) => [item.id, index + 1]));
   const entries = text[0].entry_ids.map((ids, index) => ({
-    id: ids[0], text: text[1][index].trim(), html: html[1][index].trim(),
+    id: ids[0], input_index: inputPositions.get(ids[0]), bibliography_index: index + 1,
+    text: text[1][index].trim(), html: html[1][index].trim(),
   }));
   if (entries.length !== items.length || new Set(entries.map(row => row.id)).size !== items.length) {
     throw new Error('Renderer did not preserve every input ID');
   }
   return {
-    schema_version: 1, status: 'candidate_only',
+    schema_version: 2, status: 'candidate_only',
+    input_sha256: sha256(JSON.stringify(items)),
+    bibliography_order: entries.map(row => row.id),
     style: {key: args['--style'] || 'custom', sha256: sha256(style),
             source: styleFile ? manifest.files[styleFile].source : path.resolve(args['--style-file'])},
     renderer: {name: 'citeproc-js', package_version: '2.4.63', processor_version: CSL.PROCESSOR_VERSION},
@@ -130,9 +175,9 @@ function main() {
         'node format_bibliography.cjs --input items.json (--style gbt2025|apa7|ieee | --style-file independent.csl) [--output rendered.json]\n');
       return;
     }
-    const result = render(JSON.parse(fs.readFileSync(args['--input'], 'utf8')), args);
+    const result = render(JSON.parse(fs.readFileSync(args['--input'], 'utf8').replace(/^\uFEFF/, '')), args);
     const output = JSON.stringify(result, null, 2) + '\n';
-    if (args['--output']) fs.writeFileSync(args['--output'], output, 'utf8');
+    if (args['--output']) fs.writeFileSync(args['--output'], output, {encoding: 'utf8', flag: 'wx'});
     else process.stdout.write(output);
   } catch (error) {
     process.stderr.write('Bibliography rendering failed: ' + error.message + '\n');
